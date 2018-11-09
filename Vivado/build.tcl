@@ -32,7 +32,7 @@
 #*****************************************************************************************
 
 # Set the reference directory for source file relative paths (by default the value is script directory path)
-set origin_dir "."
+set origin_dir [file dirname [info script]]
 
 # Use origin directory path location variable, if specified in the tcl shell
 if { [info exists ::origin_dir_loc] } {
@@ -142,8 +142,12 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
+set files [list \
+"[file normalize "$origin_dir/src/hdl/quad_seven_seg.v"]"\
+]
+add_files -norecurse -fileset $obj $files
+set obj [get_filesets sources_1]
 set_property -name "top" -value "quad_seven_seg" -objects $obj
-set_property -
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -153,7 +157,14 @@ if {[string equal [get_filesets -quiet constrs_1] ""]} {
 # Set 'constrs_1' fileset object
 set obj [get_filesets constrs_1]
 
-# Empty (no sources present)
+# Add constraint files
+set file "[file normalize "$origin_dir/src/xdc/quad_seven_seg.xdc"]"
+set file [file normalize $file]
+set file_added [add_files -norecurse -fileset $obj $file]
+set file "$origin_dir/src/xdc/quad_seven_seg.xdc"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets constrs_1] [list "*$file"]]
+set_property -name "file_type" -value "XDC" -objects $file_obj
 
 # Set 'constrs_1' fileset properties
 set obj [get_filesets constrs_1]
@@ -169,7 +180,7 @@ set obj [get_filesets sim_1]
 
 # Set 'sim_1' fileset properties
 set obj [get_filesets sim_1]
-set_property -name "top" -value "${_xil_proj_name_}_wrapper" -objects $obj
+#set_property -name "top" -value "quad_seven_seg" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 
 # Create 'synth_1' run (if not found)
@@ -409,8 +420,8 @@ puts "INFO: Project created:${_xil_proj_name_}"
 # add_files -norecurse ${_xil_proj_name_}/$_xil_proj_name_}.srcs/sources_1/bd/${_xil_proj_name_}/hdl/${_xil_proj_name_}_wrapper.v2018
 
 # Update the compile order
-update_compile_order -fileset sources_1
-update_compile_order -fileset sim_1
+#update_compile_order -fileset sources_1
+#update_compile_order -fileset sim_1
 
 # Ensure parameter propagation has been performed
 # close_bd_design [current_bd_design]

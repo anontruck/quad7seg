@@ -1,1 +1,1 @@
-C:\Xilinx\Vivado\2018.2\bin\vivado.bat -mode batch -source build.tcl
+C:\Xilinx\Vivado\2018.2\bin\vivado.bat -nojournal -mode batch -source build.tcl
