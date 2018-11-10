@@ -176,7 +176,12 @@ if {[string equal [get_filesets -quiet sim_1] ""]} {
 
 # Set 'sim_1' fileset object
 set obj [get_filesets sim_1]
-# Empty (no sources present)
+set file "[file normalize "$origin_dir/src/sim/quad_seven_seg_tb.v"]"
+set file [file normalize $file]
+set file_added [add_files -norecurse -fileset $obj $file]
+set file "$origin_dir/src/sim/quad_seven_seg_tb.v"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
 
 # Set 'sim_1' fileset properties
 set obj [get_filesets sim_1]
